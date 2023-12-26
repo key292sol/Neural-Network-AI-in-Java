@@ -11,12 +11,12 @@ public class NeuralNetwork {
 	private Matrix[] biases;
 	private Matrix[] layers;
 
-	public NeuralNetwork (int inputs, int ops, int hiddenLayers, int hiddenNodesInLayer) {
-		this(inputs, ops, hiddenLayers, hiddenNodesInLayer, 0.5);
+	public NeuralNetwork(int inputs, int ops, int hiddenLayers, int hiddenNodesInLayer) {
+		this(inputs, ops, hiddenLayers, hiddenNodesInLayer, 0.1);
 	}
 
-	public NeuralNetwork (int inputs, int ops, int hiddenLayers, int hiddenNodesInLayer, double _learningRate) {
-		if (inputs < 1 || ops < 1 ||  (hiddenLayers > 0 && hiddenNodesInLayer < 1)) {
+	public NeuralNetwork(int inputs, int ops, int hiddenLayers, int hiddenNodesInLayer, double _learningRate) {
+		if (inputs < 1 || ops < 1 || (hiddenLayers > 0 && hiddenNodesInLayer < 1)) {
 			System.out.println("WTF?");
 			System.out.println("Give proper parameters to constructor");
 			return;
@@ -44,7 +44,7 @@ public class NeuralNetwork {
 			biases[i] = new Matrix(hiddenNodesInLayer, 1);
 		}
 	}
-	
+
 	private double sigmoid(double n) {
 		return (1 / (1 + Math.exp(-n)));
 	}
@@ -61,11 +61,6 @@ public class NeuralNetwork {
 
 	// Store activations so that we can do backpropagation in training
 	private double[] feedForward(double[] inputs, boolean storeLayers) {
-		/* if (inputs.length != numInputs) {
-			System.err.println("Inputs length and initialised inputs length is not the same");
-			return null;
-		} */
-
 		// Convert inputs to matrix
 		Matrix curLayer = Matrix.fromArray(inputs);
 
@@ -77,8 +72,8 @@ public class NeuralNetwork {
 		for (int i = 0; i < weights.length; i++) {
 			// OP = sig(W.I + B)
 			curLayer = Matrix.multiply(weights[i], curLayer); // W.I
-			curLayer = Matrix.add(curLayer, biases[i]);  // + B
-			curLayer = Matrix.mapElements(curLayer, this::sigmoid);  // sig(x)
+			curLayer = Matrix.add(curLayer, biases[i]); // + B
+			curLayer = Matrix.mapElements(curLayer, this::sigmoid); // sig(x)
 
 			if (storeLayers) {
 				layers[i + 1] = curLayer;
@@ -98,8 +93,8 @@ public class NeuralNetwork {
 		Matrix ansMatrix = Matrix.fromArray(answers);
 
 		// Calculate the errors
-		Matrix opErrors = Matrix.subtract(myOp, ansMatrix);
-		// Matrix opErrors = Matrix.subtract(ansMatrix, myOp);
+		// Matrix opErrors = Matrix.subtract(myOp, ansMatrix);
+		Matrix opErrors = Matrix.subtract(ansMatrix, myOp);
 
 		Matrix inpErrors = null;
 
@@ -116,7 +111,7 @@ public class NeuralNetwork {
 			// Derivative of the output of this layer / weights
 			Matrix opDerivative = Matrix.mapElements(layers[i + 1], this::sigmoidDerivative2);
 
-			// biasDelta    = lr * E * dx(O)
+			// biasDelta = lr * E * dx(O)
 			Matrix biasDelta = Matrix.multiply(opErrors, this.learningRate);
 			biasDelta = Matrix.multiplyElements(biasDelta, opDerivative);
 
@@ -133,8 +128,6 @@ public class NeuralNetwork {
 
 		layers = new Matrix[layers.length];
 	}
-
-
 
 	public void train(double[] inputs, double[] answers) {
 		// Predict

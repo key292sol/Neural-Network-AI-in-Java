@@ -1,17 +1,17 @@
 package ai.math;
 
+import java.util.Arrays;
 import java.util.function.DoubleFunction;
 
 public class Matrix {
 	public int rows, cols;
 	public double[][] matrix;
-	
 
 	/***************
 	 * CONSTRUCTORS
 	 ***************/
 
-	public Matrix (int _rows, int _cols, boolean randomize) {
+	public Matrix(int _rows, int _cols, boolean randomize) {
 		this(new double[_rows][_cols]);
 
 		if (randomize) {
@@ -19,12 +19,12 @@ public class Matrix {
 		}
 	}
 
-	public Matrix (int _rows, int _cols) {
+	public Matrix(int _rows, int _cols) {
 		this(_rows, _cols, true);
 	}
 
 	// This constructor sets the passed array as the matrix
-	public Matrix (double[][] arr) {
+	public Matrix(double[][] arr) {
 		this.rows = arr.length;
 		this.cols = arr[0].length;
 		this.matrix = arr;
@@ -37,7 +37,7 @@ public class Matrix {
 	public void randomize(float a, float b) {
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[0].length; j++) {
-				double random = Math.random();
+				double random = Math.random() - 0.5;
 				// matrix[i][j] = NumMath.mapValue(random, 0, 1, a, b);
 				matrix[i][j] = random;
 			}
@@ -45,7 +45,7 @@ public class Matrix {
 	}
 
 	public void randomize() {
-		this.randomize(-1, 1);
+		this.randomize(-0.5f, 0.5f);
 	}
 
 	public double[] toArray() {
@@ -59,6 +59,14 @@ public class Matrix {
 		return arr;
 	}
 
+	public String toString() {
+		String s = "";
+		for (double[] row : this.matrix) {
+			s += Arrays.toString(row);
+		}
+		s += '\n';
+		return s;
+	}
 
 	/*****************
 	 * STATIC METHODS
@@ -73,7 +81,7 @@ public class Matrix {
 		return m;
 	}
 
-	public static double[][] mapElements (double[][] m, DoubleFunction<Double> df) {
+	public static double[][] mapElements(double[][] m, DoubleFunction<Double> df) {
 		int r = m.length, c = m[0].length;
 		double[][] m2 = new double[r][c];
 
@@ -90,16 +98,15 @@ public class Matrix {
 		return (new Matrix(d));
 	}
 
-
 	/**********************
 	 * STATIC MATH METHODS
 	 **********************/
 
 	public static double[][] add(double[][] m1, double[][] m2) {
 		int r1 = m1.length,
-			c1 = m1[0].length,
-			r2 = m2.length,
-			c2 = m2[0].length;
+				c1 = m1[0].length,
+				r2 = m2.length,
+				c2 = m2[0].length;
 
 		if ((r1 != r2) || (c1 != c2)) {
 			System.err.println("The Dimensions of Matrix A does not match that of Matrix B");
@@ -119,9 +126,9 @@ public class Matrix {
 
 	public static double[][] subtract(double[][] m1, double[][] m2) {
 		int r1 = m1.length,
-			c1 = m1[0].length,
-			r2 = m2.length,
-			c2 = m2[0].length;
+				c1 = m1[0].length,
+				r2 = m2.length,
+				c2 = m2[0].length;
 
 		if ((r1 != r2) || (c1 != c2)) {
 			System.err.println("The Dimensions of Matrix A does not match that of Matrix B");
@@ -138,12 +145,12 @@ public class Matrix {
 
 		return res;
 	}
-	
+
 	public static double[][] multiply(double[][] m1, double[][] m2) {
 		int r1 = m1.length,
-			c1 = m1[0].length,
-			r2 = m2.length,
-			c2 = m2[0].length;
+				c1 = m1[0].length,
+				r2 = m2.length,
+				c2 = m2[0].length;
 
 		if (c1 != r2) {
 			System.err.println("The Columns of Matrix A does not match rows of Matrix B");
@@ -160,7 +167,7 @@ public class Matrix {
 					sum += m1[i][k] * m2[k][j];
 				}
 				newGrid[i][j] = sum;
-			}	
+			}
 		}
 
 		return newGrid;
@@ -179,9 +186,9 @@ public class Matrix {
 
 	public static double[][] multiplyElements(double[][] m1, double[][] m2) {
 		int r1 = m1.length,
-			c1 = m1[0].length,
-			r2 = m2.length,
-			c2 = m2[0].length;
+				c1 = m1[0].length,
+				r2 = m2.length,
+				c2 = m2[0].length;
 
 		if ((r1 != r2) || (c1 != c2)) {
 			System.err.println("The Dimensions of Matrix A does not match that of Matrix B");
@@ -210,7 +217,6 @@ public class Matrix {
 		return t;
 	}
 
-
 	public static Matrix add(Matrix m1, Matrix m2) {
 		double[][] m = Matrix.add(m1.matrix, m2.matrix);
 		return (new Matrix(m));
@@ -232,7 +238,7 @@ public class Matrix {
 	}
 
 	public static Matrix multiplyElements(Matrix m1, Matrix m2) {
-		double[][] m = Matrix.add(m1.matrix, m2.matrix);
+		double[][] m = Matrix.multiplyElements(m1.matrix, m2.matrix);
 		return (new Matrix(m));
 	}
 
