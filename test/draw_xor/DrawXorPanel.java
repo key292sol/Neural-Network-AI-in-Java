@@ -7,10 +7,11 @@ import javax.swing.JPanel;
 import javax.swing.plaf.ColorUIResource;
 
 import ai.NeuralNetwork;
+import ai.NeuralNetwork.OpType;
 
 public class DrawXorPanel extends JPanel {
 
-	final int SIZE = 9;
+	final int SIZE = 2;
 
 	double[][] data = {
 			{ 0, 0 },
@@ -25,27 +26,13 @@ public class DrawXorPanel extends JPanel {
 
 	NeuralNetwork nn;
 
-	boolean started = false;
-
 	public DrawXorPanel() {
-		nn = new NeuralNetwork(2, 1, 1, 2, 0.1);
-	}
-
-	private void sleepme(int n) {
-		try {
-			Thread.sleep(n);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		nn = new NeuralNetwork(2, 1, 1, 2, OpType.BOOL_CLASSIFICATION, 0.075);
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-
-		if (!started) {
-			started = true;
-		}
 
 		// sleepme(500);
 
@@ -58,21 +45,16 @@ public class DrawXorPanel extends JPanel {
 				double y = (j * 1.0) / HEIGHT;
 				double[] inputs = { x, y };
 
-				float op = (float) (nn.predict(inputs)[0]);
+				float op = (float) (nn.feedForward(inputs)[0]);
 
 				Color c = new ColorUIResource(op, op, op);
-				// c = Color.BLACK;
 
 				g.setColor(c);
 				g.fillRect(i, j, SIZE, SIZE);
-
-				// g.setColor(Color.BLACK);
-				// op = ((float) Math.round(op * 100)) / 100;
-				// g.drawString(Float.toString(op), i, j);
 			}
 		}
 
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 1000; i++) {
 			nn.train(data, answers);
 		}
 

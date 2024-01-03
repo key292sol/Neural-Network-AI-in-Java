@@ -6,8 +6,8 @@ public class DrawXorFrame extends JFrame {
 	public DrawXorFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 400);
+		add(new DrawXorPanel());
 		setVisible(true);
 
-		add(new DrawXorPanel());
 	}
 }
