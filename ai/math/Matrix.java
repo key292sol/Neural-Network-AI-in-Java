@@ -110,6 +110,7 @@ public class Matrix {
 
 		if ((r1 != r2) || (c1 != c2)) {
 			System.err.println("The Dimensions of Matrix A does not match that of Matrix B");
+			System.err.println("Rows: " + r1 + " " + r2 + "\nCols: " + c1 + " " + c2);
 			System.out.println("Matrix.add()");
 			return null;
 		}
